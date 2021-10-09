@@ -1,0 +1,30 @@
+﻿@{
+}
+<ul class="navbar-nav">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item" >
+            <a class="nav-link btn btn-link">
+                Welcome @User.Identity.Name!
+            </a>
+        </li>
+        <li class="nav-item">
+            <a asp-page="/Auth/Logout" class="nav-link btn btn-link ">
+                Logout
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link">
+                Register
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Auth/Login">
+                Login
+            </a>
+        </li>
+    }
+</ul>

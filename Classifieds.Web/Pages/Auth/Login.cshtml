@@ -1,0 +1,51 @@
+﻿@page
+@model Classifieds.Web.Pages.Auth.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <section>
+            <form id="account" method="post">
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <input asp-for="ReturnUrl" type="hidden" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+    <div class="col-md-4">
+        <p>Log In With</p>
+        <a asp-page-handler="LoginWithGoogle" asp-route-returnUrl="@Model.ReturnUrl">Login With Google</a> <br/>
+        <a asp-page-handler="LoginWithFacebook" asp-route-returnUrl="@Model.ReturnUrl">Login With Facebook</a> <br />
+        <a asp-page-handler="LoginWithTwitter" asp-route-returnUrl="@Model.ReturnUrl">Login With Twitter</a> <br />
+        <a asp-page-handler="LoginWithMicrosoft" asp-route-returnUrl="@Model.ReturnUrl">Login With Microsoft</a> <br />
+    </div>
+</div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Classifieds.Data;
 using Classifieds.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Classifieds.Web.Pages.Advertisements
 {
+    [AllowAnonymous]
     public class DetailsModel : PageModel
     {
         private readonly Classifieds.Data.ApplicationDbContext _context;

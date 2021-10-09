@@ -1,7 +1,11 @@
 using Classifieds.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +33,18 @@ namespace Classifieds.Web
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"))
             );
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                ////o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            })
+                .AddCookie(q => q.LoginPath = "/Auth/Login")
+                .AddGoogle(o => { o.ClientId = Configuration["Google:ClientId"]; o.ClientSecret = Configuration["Google:ClientSecret"]; });
+                ////.AddTwitter(o => { o.ConsumerKey = ""; o.ConsumerSecret = ""; })
+                ////.AddFacebook(o => { o.ClientId = ""; o.ClientSecret = ""; })
+                ////.AddMicrosoftAccount(o => { o.ClientId = ""; o.ClientSecret = ""; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +66,7 @@ namespace Classifieds.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
