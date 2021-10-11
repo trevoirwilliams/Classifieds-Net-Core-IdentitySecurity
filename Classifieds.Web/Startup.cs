@@ -1,10 +1,15 @@
 using Classifieds.Data;
+using Classifieds.Data.Entities;
+using Classifieds.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,18 +38,16 @@ namespace Classifieds.Web
                 options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"))
             );
 
-            services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
+            services.AddTransient<IEmailSender>(s => new EmailSender("localhost", 25, "no-reply@classified.com"));
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                ////o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
-            })
-                .AddCookie(q => q.LoginPath = "/Auth/Login")
-                .AddGoogle(o => { o.ClientId = Configuration["Google:ClientId"]; o.ClientSecret = Configuration["Google:ClientSecret"]; });
-                ////.AddTwitter(o => { o.ConsumerKey = ""; o.ConsumerSecret = ""; })
-                ////.AddFacebook(o => { o.ClientId = ""; o.ClientSecret = ""; })
-                ////.AddMicrosoftAccount(o => { o.ClientId = ""; o.ClientSecret = ""; });
+            services.AddDefaultIdentity<User>(options => {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.SignIn.RequireConfirmedAccount = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

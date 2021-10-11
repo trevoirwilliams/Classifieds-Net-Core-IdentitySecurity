@@ -3,7 +3,7 @@
 <ul class="navbar-nav">
     @if (User.Identity.IsAuthenticated)
     {
-        <li class="nav-item" >
+        <li class="nav-item">
             <a class="nav-link btn btn-link">
                 Welcome @User.Identity.Name!
             </a>
@@ -17,9 +17,7 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link">
-                Register
-            </a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" asp-page="/Auth/Login">
