@@ -1,6 +1,7 @@
 using Classifieds.Data;
 using Classifieds.Data.Entities;
 using Classifieds.Web.Services;
+using Classifieds.Web.Services.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -40,13 +41,17 @@ namespace Classifieds.Web
 
             services.AddTransient<IEmailSender>(s => new EmailSender("localhost", 25, "no-reply@classified.com"));
 
-            services.AddDefaultIdentity<User>(options => {
+            services.AddDefaultIdentity<User>(options =>
+            {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
                 options.SignIn.RequireConfirmedAccount = true;
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddPasswordValidator<PasswordValidatorService>();
+            
             services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
         }
 
