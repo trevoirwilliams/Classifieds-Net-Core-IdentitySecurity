@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Classifieds.Data.Entities;
+using Classifieds.Web.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Classifieds.Data;
-using Classifieds.Data.Entities;
+using System.Threading.Tasks;
 
 namespace Classifieds.Web.Pages.Advertisements
 {
+    [Authorize(Policy = Policies.IsMinimumAge)]
     public class CreateModel : PageModel
     {
         private readonly Classifieds.Data.ApplicationDbContext _context;
@@ -21,7 +20,7 @@ namespace Classifieds.Web.Pages.Advertisements
 
         public IActionResult OnGet()
         {
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return Page();
         }
 

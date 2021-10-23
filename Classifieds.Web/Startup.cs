@@ -1,15 +1,12 @@
 using Classifieds.Data;
 using Classifieds.Data.Entities;
+using Classifieds.Web.Constants;
 using Classifieds.Web.Services;
 using Classifieds.Web.Services.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Classifieds.Web
 {
@@ -53,10 +47,20 @@ namespace Classifieds.Web
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 3;
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddPasswordValidator<PasswordValidatorService>();              
-            
-            services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
+                .AddPasswordValidator<PasswordValidatorService>()
+                .AddClaimsPrincipalFactory<CustomClaimsService>();
+
+            services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+                options.AddPolicy(Policies.IsMinimumAge, policy =>
+                    policy.RequireClaim(UserClaims.isMinimumAge, "true"));
+            });
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

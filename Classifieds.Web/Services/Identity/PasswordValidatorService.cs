@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Classifieds.Web.Services.Identity
@@ -48,4 +50,5 @@ namespace Classifieds.Web.Services.Identity
             return Task.FromResult(IdentityResult.Success);
         }
     }
+
 }

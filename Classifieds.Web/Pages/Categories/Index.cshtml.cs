@@ -1,4 +1,5 @@
-﻿using Classifieds.Data.Entities;
+﻿using Classifieds.Data.Constants;
+using Classifieds.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Classifieds.Web.Pages.Categories
 {
+    [Authorize(Roles = Roles.Administrator)]
     public class IndexModel : PageModel
     {
         private readonly Classifieds.Data.ApplicationDbContext _context;
