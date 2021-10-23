@@ -52,6 +52,13 @@ namespace Classifieds.Web
                 .AddPasswordValidator<PasswordValidatorService>()
                 .AddClaimsPrincipalFactory<CustomClaimsService>();
 
+            services.AddAuthentication()
+                .AddGoogle(googleOptions => {
+                    googleOptions.ClientId = Configuration["Google:ClientId"];
+                    googleOptions.ClientSecret = Configuration["Google:ClientSecret"];
+                });
+              
+
             services.AddAuthorization(options =>
             {
                 options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
